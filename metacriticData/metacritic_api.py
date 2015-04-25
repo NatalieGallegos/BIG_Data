@@ -7,7 +7,6 @@ This will return data about the movie, including the url.
 
 The function internally gets ratings for the movie as well. 
 
-@author: Natalie
 """
 import unirest
 
@@ -40,16 +39,26 @@ def findMovie(movieTitle):
         "retry": 4,
         "title": movieTitle
       }
-    )    
-    data = response.body
-    resultSet = data["result"]
-    print(str(resultSet["genre"]) + "::" + str(resultSet["cast"]) + "::" + str(resultSet["url"]) + "\n")
-    splitURL = resultSet["url"].split("/")
-    searchName = splitURL[-1]
-    getReviews(searchName)
-    return searchName
+    ) 
+    
+    if str(response.body) != 'False!':
+        data = response.body
+        resultSet = data["result"]
+        print(str(resultSet["genre"]) + "::" + str(resultSet["cast"]) + "::" + str(resultSet["url"]) + "\n")
+        #splitURL = resultSet["url"].split("/")
+        #searchName = splitURL[-1]
+        #getReviews(searchName)
+        genresSet = resultSet["genre"]
+        genres = genresSet.split("\n")
+        counter = 0
+        while counter < len(genres):
+            genres[counter] = str(genres[counter])
+            counter += 1
+
+    return genres
     
 
-searchName = findMovie("Titanic")   
+genres = findMovie("Titanic")
+print (genres)  
 #getReviews("titanic")     
 print("THE END!")
