@@ -1,5 +1,6 @@
 import gzip
-import simplejson
+import json
+import sys
 
 def parse(filename):
   f = gzip.open(filename, 'r')
@@ -16,6 +17,18 @@ def parse(filename):
     entry[eName] = rest
   yield entry
 
+print "Sample:"
 for e in parse("../Video_Games.txt.gz"):
-  print simplejson.dumps(e)
+  print json.dumps(e, indent=4)
   break #just display the first entry
+
+print "Count:"
+i = 0
+for e in parse("../Video_Games.txt.gz"):
+  i += 1
+  sys.stdout.write("{}\r".format(i))
+  sys.stdout.flush()
+
+print "\ndone!"
+
+
