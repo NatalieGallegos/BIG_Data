@@ -45,9 +45,9 @@ def findMovie(movieTitle):
         data = response.body
         resultSet = data["result"]
         print(str(resultSet["genre"]) + "::" + str(resultSet["cast"]) + "::" + str(resultSet["url"]) + "\n")
-        #splitURL = resultSet["url"].split("/")
-        #searchName = splitURL[-1]
-        #getReviews(searchName)
+        splitURL = resultSet["url"].split("/")
+        searchName = splitURL[-1]
+        getReviews(searchName)
         genresSet = resultSet["genre"]
         genres = genresSet.split("\n")
         counter = 0
@@ -57,8 +57,33 @@ def findMovie(movieTitle):
 
     return genres
     
+def findGame(gameTitle):   
+    response = unirest.post("https://byroredux-metacritic.p.mashape.com/find/game",
+      headers={
+        "X-Mashape-Key": "PAz5rLbjpTmshXARxUBogiGCzZKhp1Q3K0pjsnPGIvR2ZaIpxY",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      },
+      params={
+        "platform": 1,
+        "retry": 4,
+        "title": gameTitle
+      }
+    )
+    data = response.body
+    results = data["result"]
+    if str(results).lower() != 'false':
+        genres = results["genre"]
+        print(str(results["name"]) + "\n" + str(results["genre"]) + "\n" + 
+        str(results["platform"].split("\n")) )
+        return genres
+    #return str(results["genre"])
+    
+#Test statements
 
-genres = findMovie("Titanic")
-print (genres)  
+#genres = findMovie("Titanic")
+print("Test statements")
+gameGenres = findGame("Little Inferno")
+#print (genres)  
 #getReviews("titanic")     
 print("THE END!")
