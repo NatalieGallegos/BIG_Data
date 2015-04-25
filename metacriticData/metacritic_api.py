@@ -39,7 +39,8 @@ def findMovie(movieTitle):
         "retry": 4,
         "title": movieTitle
       }
-    ) 
+    )
+    genres = ["N/A"]
     data = response.body
     resultSet = data["result"]
     if str(resultSet).lower() != 'false':
@@ -54,6 +55,9 @@ def findMovie(movieTitle):
         while counter < len(genres):
             genres[counter] = str(genres[counter])
             counter += 1
+        return genres
+    else :
+        print("No Match Found")
         return genres
     
 def findGame(gameTitle):   
@@ -71,6 +75,7 @@ def findGame(gameTitle):
     )
     data = response.body
     results = data["result"]
+    genre = ["N/A"]
     if str(results).lower() != 'false':
         genres = results["genre"]
         print(str(results["name"]) + "\n" + str(results["genre"]) + "\n" + 
@@ -79,13 +84,15 @@ def findGame(gameTitle):
         searchName = splitURL[-1]
         getReviews(searchName)
         return genres
-    #return str(results["genre"])
+    else:
+        print("No Match Fouond")
+        return genre
     
 #Test statements
-
-#genres = findMovie("Titanic")
 print("Test statements")
-gameGenres = findGame("Mortal Kombat")
-#print (genres)  
+genres = findMovie("skjhnewrerdc")
+print ("genres: " + str(genres) )
+gameGenres = findGame("Mortal Kombat") 
 #getReviews("titanic")     
 print("THE END!")
+
