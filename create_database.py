@@ -31,7 +31,8 @@ if __name__ == '__main__':
 		i += 1
 		sys.stdout.write("{}\r".format(i))
 		sys.stdout.flush()
-		del e['review/text']
+		if e.get('review/text'):
+			del e['review/text']
 		db.movies.insert_one(e)
 
 	i=0
@@ -41,7 +42,8 @@ if __name__ == '__main__':
 		i += 1
 		sys.stdout.write("{}\r".format(i))
 		sys.stdout.flush()
-		del e['review/text']
+		if e.get('review/text'):
+			del e['review/text']
 		db.music.insert_one(e)
 
 	i=0
@@ -51,7 +53,8 @@ if __name__ == '__main__':
 		i += 1
 		sys.stdout.write("{}\r".format(i))
 		sys.stdout.flush()
-		del e['review/text']
+		if e.get('review/text'):
+			del e['review/text']
 		db.books.insert_one(e)
 
 	i=0
@@ -61,5 +64,6 @@ if __name__ == '__main__':
 		i += 1
 		sys.stdout.write("{}\r".format(i))
 		sys.stdout.flush()
-		del e['review/text']
+		if e.get('review/text'):
+			del e['review/text']
 		db.games.insert_one(e)
