@@ -11,20 +11,50 @@ def calcStats(collection):
 	count = collection.count()
 	print "Count: {}".format(count)
 
-	median = 0
-	cursor = collection.find().sort( "review/score" )
-	if(count%2 == 1):
-		median = cursor.skip(count/2-1).limit(1)[0]["review/score"]
+	# median = 0
+	# cursor = collection.find({}, {"review/score": 1}).sort( "review/score" )
+	# if(count%2 == 1):
+	# 	median = cursor.hint("review/score_1")[count/2]["review/score"]
+	# else:
+	# 	low = cursor.hint("review/score_1")[count/2]["review/score"]
+	# 	high = cursor.hint("review/score_1")[count/2+1]["review/score"]
+	# 	median = (low+high)/2.0
+	# print "Median: {}".format(median)
+
+	mode_c = list(collection.aggregate([\
+			{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
+			{'$group':{'_id': '$review/score', 'count': {'$sum': 1}} }\
+			]))
+	mode = max(mode_c, key = lambda x:x["count"])["_id"]
+	mode_c.sort(key = lambda x:x["count"])
+
+	s=0
+	median=0
+	if(count%2==1):
+		for item in mode_c:
+			s += item["count"]
+			if(s >= count/2+1):
+				median = item["_id"]
+				break
 	else:
-		low = cursor.skip(count/2-1).limit(1)[0]["review/score"]
-		high = cursor.skip(count/2).limit(1)[0]["review/score"]
+		low=high=0
+		for item in mode_c:
+			s += item["count"]
+			if(high < low):
+				high = item["_id"]
+				break
+			if(s > count/2):
+				low=high=item["_id"]
+				break
+			elif(s == count/2):
+				low=item["_id"]
+		if(high == 0):
+			high = mode
 		median = (low+high)/2.0
+
 	print "Median: {}".format(median)
 
-	mode = max(collection.aggregate([\
-		{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
-		{'$group':{'_id': '$review/score', 'count': {'$sum': 1}} }\
-		]), key = lambda x:x["count"])["_id"]
+		
 	print "Mode: {}".format(mode)
 
 	averages = list(collection.aggregate([\
