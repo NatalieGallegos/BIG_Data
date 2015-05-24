@@ -6,7 +6,7 @@ from pymongo import MongoClient
 
 
 def calcStats(collection):
-	print "Calculating stats for movies:"
+	print "Calculating stats for {}:".format(collection.full_name)
 
 	count = collection.count()
 	print "Count: {}".format(count)
