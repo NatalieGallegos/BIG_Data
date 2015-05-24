@@ -12,7 +12,7 @@ def calcStats(collection):
 	print "Count: {}".format(count)
 
 	median = 0
-	cursor = collection.find().sort( {'review/score': 1} )
+	cursor = collection.find().sort( "review/score" )
 	if(count%2 == 1):
 		median = cursor.skip(count/2-1).limit(1)[0]["review/score"]
 	else:
