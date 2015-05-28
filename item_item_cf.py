@@ -18,6 +18,10 @@ def fill_user_reviews(collection, products_dict):
 
 
 def get_products(collection, products_dict):
+    
+    #db.games.aggregate([{$match:{"review/score":{$exists:true, $ne:null}}},{$group:{_id:"$product/productId", "review/score":{$push:"$review/score"}, "review/userId":{$push:"$review/userId"}}},{$limit:10}])
+    
+    '''
     unique_p = []
 
     if (collection.count() > 10000000):
@@ -32,27 +36,34 @@ def get_products(collection, products_dict):
     
     for product in unique_p:
         products_dict[product] = {}
+    '''
 
 if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
     
-    game_products_dict = {}
-    music_products_dict = {}
-    movie_products_dict = {}
-    book_products_dict = {}
-    
-    get_products(db.games, game_products_dict)
+    #game_products_dict = {}
+    #music_products_dict = {}
+    #movie_products_dict = {}
+    #book_products_dict = {}
+
+    #get_products(db.games, game_products_dict)
     #get_products(db.music, music_products_dict)
     #get_products(db.movies, movie_products_dict)
     #get_products(db.books, book_products_dict)
     
-    fill_user_reviews(db.games, game_products_dict)
+    #fill_user_reviews(db.games, game_products_dict)
 
     #print "Games unique ids: ", len(game_products_dict)
     #print "Music unique ids: ", len(music_products_dict)
     #print "Movies unique ids: ", len(movie_products_dict)
     #print "Books unique ids: ", len(book_products_dict)
 
-
-
+    pipeline = [{"$match": {"review/score": {"$exists": "true", "$ne": "null"}}},\
+    {"$group": {"_id": "$product/productId", "review/score": {"$push": "$review/score"}, "review/userId": {"$push": "$review/userId"}}},\
+    {"$limit": 10}\
+    ]
+    
+    cursor = db.command('aggregate', 'games', pipeline=pipeline)
+    for result in cursor:
+        print result
