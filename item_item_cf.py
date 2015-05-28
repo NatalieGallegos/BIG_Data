@@ -15,6 +15,31 @@ def fill_user_reviews(collection, products_dict):
         for user in all_users:
             if user not in users:
                 users[user] = 0.0
+            
+def fill_with_reviews(collection, products_dict, limit):
+    all_users = {}
+    results = collection.aggregate([{'$match':{"review/score":\
+    {'$exists': True, '$ne': None},\
+    "review/userId":{'$ne':"unknown"}}},\
+    {'$group':{'_id':"$product/productId", "scores":{'$push':"$review/score"},\
+    "users":{'$push':"$review/userId"}}},{'$limit': limit}])
+    #add reviews and user pairs to each product_id
+    for result in results:
+        product_id = result['_id']
+        scores = result['scores']
+        users = result['users']
+        for i in range(len(scores)):
+            user = users[i]
+            score = scores[i]
+            products_dict[product_id][user] = score
+            all_users[user] = 1
+    #fill in missing users with 0 as their reviews
+    #for users in products_dict.values():
+     #   for user in all_users:
+      #      if user not in users:
+       #         users[user] = 0.0
+            
+    
 
 
 def get_products(collection, products_dict):
@@ -42,22 +67,22 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
     
-    #game_products_dict = {}
+    game_products_dict = {}
     #music_products_dict = {}
     #movie_products_dict = {}
     #book_products_dict = {}
 
-    #get_products(db.games, game_products_dict)
+    get_products(db.games, game_products_dict)
     #get_products(db.music, music_products_dict)
     #get_products(db.movies, movie_products_dict)
-    #get_products(db.books, book_products_dict)
-    
+    #get_products(db.books, book_products_dict)    
     #fill_user_reviews(db.games, game_products_dict)
 
     #print "Games unique ids: ", len(game_products_dict)
     #print "Music unique ids: ", len(music_products_dict)
     #print "Movies unique ids: ", len(movie_products_dict)
     #print "Books unique ids: ", len(book_products_dict)
+
 
     pipeline = [{"$match": {"review/score": {"$exists": "true", "$ne": "null"}}},\
     {"$group": {"_id": "$product/productId", "review/score": {"$push": "$review/score"}, "review/userId": {"$push": "$review/userId"}}},\
@@ -67,3 +92,11 @@ if __name__ == '__main__':
     cursor = db.command('aggregate', 'games', pipeline=pipeline)
     for result in cursor:
         print result
+
+    #Testing fill_reviews - careful!
+    fill_with_reviews(db.games, game_products_dict, len(game_products_dict))
+    sample = game_products_dict.keys()[0]
+    print(str(sample) + str(game_products_dict[sample]))
+
+
+
