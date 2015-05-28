@@ -12,8 +12,7 @@ def get_products(collection, products_dict):
         unique_p = list(collection.distinct("product/productId"))
 
     db.subset.drop()
-
-    unique_p = list(collection.distinct("product/productId"))
+    
     for product in unique_p:
         products_dict[product] = {}
 
