@@ -1,15 +1,26 @@
 import sys
 import math
+import time
 
 from pymongo import MongoClient
 
 
 
 def calcStats(collection):
+	start = time.time()
 	print "Calculating stats for {}:".format(collection.full_name)
 
 	count = collection.count()
 	print "Count: {}".format(count)
+
+	uniqueProducts = list(collection.aggregate([{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
+		{'$group': {'_id': '$product/productId'}},\
+	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}]))[0]["count"]
+	uniqueUsers = list(collection.aggregate([{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
+		{'$group': {'_id': '$review/userId'}},\
+	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}]))[0]["count"]
+	print "Products: {}".format(uniqueProducts)
+	print "Users: {}".format(uniqueUsers)
 
 	# median = 0
 	# cursor = collection.find({}, {"review/score": 1}).sort( "review/score" )
@@ -71,6 +82,8 @@ def calcStats(collection):
 
 	sd = math.sqrt(avgx2 - math.pow(avg, 2))
 	print "Standard Deviation: {}".format(sd)
+
+	print "elapsed time: {} seconds".format(time.time()-start)
 
 
 
