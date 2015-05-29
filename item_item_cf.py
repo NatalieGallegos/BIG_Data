@@ -16,7 +16,7 @@ def fill_user_reviews(collection, products_dict):
             if user not in users:
                 users[user] = 0.0
             
-def fill_with_reviews(collection, products_dict, limit):
+def fill_with_reviews(collection, item_prefs, limit):
     all_users = {}
     results = collection.aggregate([{'$match':{"review/score":\
     {'$exists': True, '$ne': None},\
@@ -24,15 +24,30 @@ def fill_with_reviews(collection, products_dict, limit):
     {'$group':{'_id':"$product/productId", "scores":{'$push':"$review/score"},\
     "users":{'$push':"$review/userId"}}},{'$limit': limit}])
     #add reviews and user pairs to each product_id
+    #item_prefs = {}
     for result in results:
         product_id = result['_id']
+        #print product_id
         scores = result['scores']
+        #print scores
         users = result['users']
+        #print users
+        '''
         for i in range(len(scores)):
             user = users[i]
             score = scores[i]
             products_dict[product_id][user] = score
             all_users[user] = 1
+        '''
+        user_scores_dict = {}
+        for i in range(len(scores)):
+            user_scores_dict[users[i].encode('ascii')]=scores[i]
+        #print user_scores_dict
+
+        item_prefs[product_id.encode('ascii')] = user_scores_dict
+    
+    #print item_prefs
+
     #fill in missing users with 0 as their reviews
     #for users in products_dict.values():
      #   for user in all_users:
@@ -67,6 +82,8 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
     
+    game_item_prefs = {}
+    
     game_products_dict = {}
     #music_products_dict = {}
     #movie_products_dict = {}
@@ -83,7 +100,7 @@ if __name__ == '__main__':
     #print "Movies unique ids: ", len(movie_products_dict)
     #print "Books unique ids: ", len(book_products_dict)
 
-
+    '''
     pipeline = [{"$match": {"review/score": {"$exists": "true", "$ne": "null"}}},\
     {"$group": {"_id": "$product/productId", "review/score": {"$push": "$review/score"}, "review/userId": {"$push": "$review/userId"}}},\
     {"$limit": 10}\
@@ -92,11 +109,12 @@ if __name__ == '__main__':
     cursor = db.command('aggregate', 'games', pipeline=pipeline)
     for result in cursor:
         print result
+    '''
 
     #Testing fill_reviews - careful!
-    fill_with_reviews(db.games, game_products_dict, len(game_products_dict))
-    sample = game_products_dict.keys()[0]
-    print(str(sample) + str(game_products_dict[sample]))
+    fill_with_reviews(db.games, game_item_prefs, 5)
+    sample = game_item_prefs.keys()[0]
+    print(str(sample) + str(game_item_prefs[sample]))
 
 
 
