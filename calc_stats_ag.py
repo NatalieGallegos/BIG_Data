@@ -37,7 +37,7 @@ def calcStats(collection):
 				median = item["_id"]
 				break
 	else:
-		low=high=0
+		low=high=-10000
 		for item in mode_c:
 			s += item["count"]
 			if(high < low):
