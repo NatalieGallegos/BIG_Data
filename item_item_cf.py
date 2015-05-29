@@ -1,5 +1,5 @@
 import pymongo
-
+from math import sqrt
 
 def fill_user_reviews(collection, products_dict):
     all_users = {}
@@ -78,6 +78,123 @@ def get_products(collection, products_dict):
         products_dict[product] = {}
     '''
 
+###################################################################
+################ COLLABORATIVE FILTER SECTION #####################
+###################################################################
+
+#Returns a distance-base similarity score for person1 and person2
+
+def sim_distance(prefs, item1, item2):
+    #Get the list of shared_items
+    si = {}
+    for user in prefs[item1]:
+        if user in prefs[item2]:
+            si[user] = 1
+
+    #if they have no rating in common, return 0
+    if len(si) == 0: 
+        return 0
+
+    #Add up the squares of all differences
+    sum_of_squares = sum([pow(prefs[item1][user]-prefs[item2][user],2) for user in prefs[item1] if user in prefs[item2]])
+
+    return 1 / (1 + sum_of_squares)
+
+
+#Returns the Pearson correlation coefficient for p1 and p2 
+def sim_pearson(prefs,p1,p2):
+    #Get the list of mutually rated items
+    si = {}
+    for item in prefs[p1]:
+        if item in prefs[p2]: 
+            si[item] = 1
+
+    #if they are no rating in common, return 0
+    if len(si) == 0:
+        return 0
+
+    #sum calculations
+    n = len(si)
+
+    #sum of all preferences
+    sum1 = sum([prefs[p1][it] for it in si])
+    sum2 = sum([prefs[p2][it] for it in si])
+
+    #Sum of the squares
+    sum1Sq = sum([pow(prefs[p1][it],2) for it in si])
+    sum2Sq = sum([pow(prefs[p2][it],2) for it in si])
+
+    #Sum of the products
+    pSum = sum([prefs[p1][it] * prefs[p2][it] for it in si])
+
+    #Calculate r (Pearson score)
+    num = pSum - (sum1 * sum2/n)
+    den = sqrt((sum1Sq - pow(sum1,2)/n) * (sum2Sq - pow(sum2,2)/n))
+    if den == 0:
+        return 0
+
+    r = num/den
+
+    return r
+
+#Returns the best matches for person from the prefs dictionary
+#Number of the results and similiraty function are optional params.
+def top_matches(prefs,item,n=5,similarity=sim_pearson):
+    scores = [(similarity(prefs,item,other),other)
+                for other in prefs if other != item]
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+
+#Create a dictionary of items showing which other items they are most similar to.
+
+def calculate_sim_items(prefs,n=10):
+    result = {}
+
+    c=0
+    for item in prefs:
+        #Status updates for large datasets
+        c+=1
+        if c%100==0:
+            print "%d / %d" % (c, len(prefs))
+        #Find the most similar items to this one
+        scores = top_matches(prefs,item,n=n,similarity=sim_distance)
+        result[item] = scores
+    return result
+
+def get_recommended_items(prefs, item_match, user):
+    user_ratings = prefs[user]
+    scores = {}
+    total_sim = {}
+
+    #loop over items rated by this user
+    for (item, rating) in user_ratings.items():
+
+        #Loop over items similar to this one
+        for (similarity, item2) in item_match[item]:
+
+            #Ignore if this user has already rated this item
+            if item2 in user_ratings:
+                continue
+            #Weighted sum of rating times similarity
+            scores.setdefault(item2,0)
+            scores[item2] += similarity * rating
+            #Sum of all the similarities
+            total_sim.setdefault(item2,0)
+            total_sim[item2]+=similarity
+
+    #Divide each total score by total weighting to get an average
+    rankings = [(score/total_sim[item],item) for item,score in scores.items()]
+
+    #Return the rankings from highest to lowest
+    rankings.sort()
+    rankings.reverse()
+    return rankings
+
+###################################################################
+############################# MAIN ################################
+###################################################################
+
 if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
@@ -112,9 +229,9 @@ if __name__ == '__main__':
     '''
 
     #Testing fill_reviews - careful!
-    fill_with_reviews(db.games, game_item_prefs, 5)
-    sample = game_item_prefs.keys()[0]
-    print(str(sample) + str(game_item_prefs[sample]))
+    fill_with_reviews(db.games, game_item_prefs, 25)
+    #sample = game_item_prefs.keys()[0]
+    #print(str(sample) + str(game_item_prefs[sample]))
 
-
-
+    result = calculate_sim_items(game_item_prefs, 5)
+    print result
