@@ -22,7 +22,7 @@ def fill_with_reviews(collection, item_prefs, limit):
     {'$exists': True, '$ne': None},\
     "review/userId":{'$ne':"unknown"}}},\
     {'$group':{'_id':"$product/productId", "scores":{'$push':"$review/score"},\
-    "users":{'$push':"$review/userId"}}},{'$limit': limit}])
+    "users":{'$push':"$review/userId"}}},{'$limit': limit}], allowDiskUse=True)
     #add reviews and user pairs to each product_id
     #item_prefs = {}
     for result in results:
