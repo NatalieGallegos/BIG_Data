@@ -243,17 +243,18 @@ if __name__ == '__main__':
     fill_with_reviews(db.games, game_item_prefs, 500)
     #sample = game_item_prefs.keys()[0]
     #print(str(sample) + str(game_item_prefs[sample]))
+    
     for i in range(0, 5):
         sample = game_item_prefs.keys()[i]
         print(str(sample) + ": " + str(game_item_prefs[sample])+ "\n")
-
+    
     user_prefs= transform_prefs(game_item_prefs)
     print "Transforming...\n"
-
+    
     for i in range(0, 5):
         sample = user_prefs.keys()[i]
         print(str(sample) + ": " + str(user_prefs[sample])+ "\n")
-
+    
     item_match = calculate_sim_items(game_item_prefs, 5)
     #print item_match
 
@@ -262,6 +263,6 @@ if __name__ == '__main__':
     print "\nRecommended items:"
     for i in range(len(rankings)):
         product_id = rankings[i][1]
-        titles = db.titles.find_one({"product/productId": product_id})
-        #print titles
-        print (titles["product/title"]+": "+str(rankings[i][0]))
+        game = db.games.find_one({"product/productId": product_id})
+        #print game
+        print (game["product/title"]+": "+str(rankings[i][0]))
