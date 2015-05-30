@@ -5,6 +5,7 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/blueimp-gallery.min.css">
 	<link rel="stylesheet" href="css/bootstrap-image-gallery.min.css">
+	<link rel="stylesheet" href="css/custom-styling.css">
 	<title>CS594 Big Data</title>
 	
 </head>
@@ -17,161 +18,170 @@
 		<br>
 		<hr>
 
-		<h2>
-			Statistics:
-		</h2>
-		<table class="flat-table center" style="display:inline-block">
-			<tbody>
-				<tr>
-					<th>Domain</th>
-					<th># Scores</th>
-					<th>Mean (score)</th>
-					<th>Median (score)</th>
-					<th>Mode (score)</th>
-					<th>SD (score)</th>
-					<th># Users</th>
-					<th># Items</th>
-				</tr>
-				<tr>
-					<td>Games</td>
-					<td>463,670</td>
-					<td>3.979</td>
-					<td>5</td>
-					<td>5</td>
-					<td>1.353</td>
-					<td>228,570</td>
-					<td>21,025</td>
-				</tr>
-				<tr>
-					<td>Music</td>
-					<td>6,396,351</td>
-					<td>4.342</td>
-					<td>5</td>
-					<td>5</td>
-					<td>1.123</td>
-					<td>1,134,684</td>
-					<td>556,814</td>
-				</tr>
-				<tr>
-					<td>Movies</td>
-					<td>7,850,072</td>
-					<td>4.113</td>
-					<td>5</td>
-					<td>5</td>
-					<td>1.289</td>
-					<td>1,224,267</td>
-					<td>212,836</td>
-				</tr>
-				<tr>
-					<td>Books</td>
-					<td>12,886,489</td>
-					<td>4.210</td>
-					<td>5</td>
-					<td>5</td>
-					<td>1.206</td>
-					<td>2,588,991</td>
-					<td>929,264</td>
-				</tr>
-			</tbody>
-		</table>
-
+		<div class='description'>
+			<p class='section_title'>
+				Statistics:
+			</p>
+			<table class="flat-table">
+				<tbody>
+					<tr>
+						<th>Domain</th>
+						<th># Scores</th>
+						<th>Mean (score)</th>
+						<th>Median (score)</th>
+						<th>Mode (score)</th>
+						<th>SD (score)</th>
+						<th># Users</th>
+						<th># Items</th>
+					</tr>
+					<tr>
+						<td>Games</td>
+						<td>463,670</td>
+						<td>3.979</td>
+						<td>5</td>
+						<td>5</td>
+						<td>1.353</td>
+						<td>228,570</td>
+						<td>21,025</td>
+					</tr>
+					<tr>
+						<td>Music</td>
+						<td>6,396,351</td>
+						<td>4.342</td>
+						<td>5</td>
+						<td>5</td>
+						<td>1.123</td>
+						<td>1,134,684</td>
+						<td>556,814</td>
+					</tr>
+					<tr>
+						<td>Movies</td>
+						<td>7,850,072</td>
+						<td>4.113</td>
+						<td>5</td>
+						<td>5</td>
+						<td>1.289</td>
+						<td>1,224,267</td>
+						<td>212,836</td>
+					</tr>
+					<tr>
+						<td>Books</td>
+						<td>12,886,489</td>
+						<td>4.210</td>
+						<td>5</td>
+						<td>5</td>
+						<td>1.206</td>
+						<td>2,588,991</td>
+						<td>929,264</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
 		<br>
 		<hr>
 
-		
-		<h2>
-			Histograms:
-		</h2>
-		<p>
-			We created 12 different histograms denoting the distribution of scores among both registered and anonymous users for different products:
-		</p>
-		<br>
-		<div class="center">
-			<div id="links" style="margin-left:auto; margin-right:auto; display:inline-block;">
-			    <a class="gallery-links" href="cs594.games.png" title="Games" data-gallery>
-			        <img src="cs594.games.png" alt="Games" style="height:200px; width:200px;">
-			    </a>
-			    <a class="gallery-links" href="cs594.movies.png" title="Movies" data-gallery>
-			        <img src="cs594.movies.png" alt="Movies" style="height:200px; width:200px;">
-			    </a>
-			    <a class="gallery-links" href="cs594.music.png" title="Music" data-gallery>
-			        <img src="cs594.music.png" alt="Music" style="height:200px; width:200px;">
-			    </a>
-			    <a class="gallery-links" href="cs594.books.png" title="Books" data-gallery>
-			        <img src="cs594.books.png" alt="Books" style="height:200px; width:200px;">
-			    </a>
+		<div class='description'>
+			<p class='section_title'>
+				Histograms:
+			</p>
+			<p style='padding: 20px;'>
+				We created 12 different histograms denoting the distribution of scores among both registered and anonymous users for different products:
+			</p>
+			<br>
+			<div class="center">
+				<div id="links" style="margin-left:auto; margin-right:auto; display:inline-block;">
+					<a class="gallery-links" href="cs594.games.png" title="Games" data-gallery>
+						<img src="cs594.games.png" alt="Games" style="height:200px; width:200px;">
+					</a>
+					<a class="gallery-links" href="cs594.movies.png" title="Movies" data-gallery>
+						<img src="cs594.movies.png" alt="Movies" style="height:200px; width:200px;">
+					</a>
+					<a class="gallery-links" href="cs594.music.png" title="Music" data-gallery>
+						<img src="cs594.music.png" alt="Music" style="height:200px; width:200px;">
+					</a>
+					<a class="gallery-links" href="cs594.books.png" title="Books" data-gallery>
+						<img src="cs594.books.png" alt="Books" style="height:200px; width:200px;">
+					</a>
+				</div>
 			</div>
+			<br>
+			<p style='padding: 20px;'>These histograms were generated offline in python using matplotlib</p>
 		</div>
 		<br>
-		<p>These histograms were generated offline in python using matplotlib</p>
+		<hr>
+		<div class='description'>
+			<p class='section_title'>
+				Results:
+			</p>
+		</div>
+		
 		<br>
 		<hr>
-		<h2>
-			Results:
-		</h2>
+		<div class='description'>
+			<p class='section_title'>
+				Performance:
+			</p>
+			<ul style="text-align:left; font-size:120%">
+				<li style="float:left; padding-right:50px">Histogram:
+					<ul>
+						<li>Games: 8.79 seconds</li>
+						<li>Music: 5 minutes 29.68 seconds</li>
+						<li>Movies: 7 minutes 4.78 seconds</li>
+						<li>Books: 11 minutes 36.02 seconds</li>
+					</ul>
+				</li>
+				<li style="float:left; padding-right:50px">Statistics:
+					<ul>
+						<li>Games: 9.18 seconds </li>
+						li>Music: 18 minutes and 23.61 seconds</li>
+						<li>Movies: 22 minutes and 22.89 seconds</li>
+						<li>Books: 37 minutes and 42.25 seconds</li>
+					</ul>
+				</li>
+				<li style="float:left; padding-right:50px">CF Queries:
+					<ul>
+						<li>Find Product: x seconds </li>
+						<li>Find Recommendation: x seconds</li>					
+					</ul>
+				</li>
 
+			</ul>
+			<div style="clear:both"></div>
+		</div>
 		<br>
 		<hr>
-		<h2>
-			Performance:
-		</h2>
-		<ul style="text-align:left; font-size:120%">
-			<li style="float:left; padding-right:50px">Histogram:
-				<ul>
-					<li>Games: 8.79 seconds</li>
-					<li>Music: 5 minutes 29.68 seconds</li>
-					<li>Movies: 7 minutes 4.78 seconds</li>
-					<li>Books: 11 minutes 36.02 seconds</li>
-				</ul>
-			</li>
-			<li style="float:left; padding-right:50px">Statistics:
-				<ul>
-					<li>Games: 9.18 seconds </li>
-					<li>Music: 18 minutes and 23.61 seconds</li>
-					<li>Movies: 22 minutes and 22.89 seconds</li>
-					<li>Books: 37 minutes and 42.25 seconds</li>
-				</ul>
-			</li>
-			<li style="float:left; padding-right:50px">CF Queries:
-				<ul>
-					<li>Find Product: x seconds </li>
-					<li>Find Recommendation: x seconds</li>					
-				</ul>
-			</li>
-
-		</ul>
-		<div style="clear:both"></div>
-		<br>
-		<hr>
-		<h2>
-			References:
-		</h2>
-		<br>
-		<div id="list5">
-		   <ol>
-		      <li>Papers:
-		         <ol>
-		            <li><a href="http://arantxa.ii.uam.es/~cantador/doc/2012/ceri12a.pdf">Ignacio Fernández-Tobías, Iván Cantador, Marius Kaminskas, Francesco Ricci. 2012. Cross-domain recommender systems: A survey of the state of the art. Spanish Conference on Information Retrieval</a></li>
-		            <li><a href="http://recsys.acm.org/wp-content/uploads/2014/10/recsys2014-tutorial-cross_domain.pdf">Iván Cantador and Paolo Cremonesi. 2014. Tutorial on cross-domain recommender systems. In Proceedings of the 8th ACM Conference on Recommender systems</a></li>
-		         </ol>
-		      </li>
-		      <li>Online Course:
-		         <ol>
-		            <li><a href="https://www.coursera.org/learn/recommender-systems">Coursera: Introduction to Recommender Systems</a></li>
-		         </ol>
-		      </li>
-		      <li>APIs:
-		         <ol>
-		            <li><a href="http://snap.stanford.edu/">Stanford Network Analysis Project</a></li>
-		            <li><a href="https://www.mashape.com/byroredux/metacritic-v2">Metacritic</a></li>
-		         </ol>
-		      </li>
-		      <li>Other Resources:
-		         <ol>
-		            <li><a href="https://github.com/NatalieGallegos/BIG_Data">Github</a></li>
-		         </ol>
-		      </li>
-		   </ol>
+		<div class='description'>
+			<p class='section_title'>
+				References:
+			</p>
+			<br>
+			<div id="list5">
+				<ol>
+				<li>Papers:
+					<ol>
+						<li><a href="http://arantxa.ii.uam.es/~cantador/doc/2012/ceri12a.pdf">Ignacio Fernández-Tobías, Iván Cantador, Marius Kaminskas, Francesco Ricci. 2012. Cross-domain recommender systems: A survey of the state of the art. Spanish Conference on Information Retrieval</a></li>
+						<li><a href="http://recsys.acm.org/wp-content/uploads/2014/10/recsys2014-tutorial-cross_domain.pdf">Iván Cantador and Paolo Cremonesi. 2014. Tutorial on cross-domain recommender systems. In Proceedings of the 8th ACM Conference on Recommender systems</a></li>
+					</ol>
+				</li>
+				<li>Online Course:
+					<ol>
+						<li><a href="https://www.coursera.org/learn/recommender-systems">Coursera: Introduction to Recommender Systems</a></li>
+					</ol>
+				</li>
+				<li>APIs:
+					<ol>
+						<li><a href="http://snap.stanford.edu/">Stanford Network Analysis Project</a></li>
+						<li><a href="https://www.mashape.com/byroredux/metacritic-v2">Metacritic</a></li>
+					</ol>
+				</li>
+				<li>Other Resources:
+					<ol>
+						<li><a href="https://github.com/NatalieGallegos/BIG_Data">Github</a></li>
+					</ol>
+				</li>
+				</ol>
+			</div>
 		</div>
 		<br>
 		<hr>
@@ -236,12 +246,13 @@
 			font-size: 120%;
 		}
 		.flat-table {
-			display: block;
 			font-family: sans-serif;
 			-webkit-font-smoothing: antialiased;
 			font-size: 115%;
 			overflow: auto;
-			width: auto;
+			position: relative;
+			width: 100%;
+			top: -10px;
 		}
 		th {
 			background-color: rgb(112, 196, 105);
@@ -251,8 +262,8 @@
 			text-align: center;
 		}
 		td {
-			background-color: rgb(238, 238, 238);
-			color: rgb(111, 111, 111);
+			background-color: white;
+			color: black;
 			padding: 10px 15px;
 		}
 		/* LIST #5 http://demo.marcofolio.net/css_lists/ */

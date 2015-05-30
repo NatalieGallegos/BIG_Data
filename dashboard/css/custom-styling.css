@@ -1,0 +1,11 @@
+.section_title {
+    border-radius: 15px 15px 0px 0px;
+    background: #E1E1E1;
+	font-size: 200%;
+    padding: 10px; 
+}
+.description {
+    border-radius: 25px;
+    border: 2px solid #E1E1E1;
+	padding: 0px 0px 10px 0px;
+}
