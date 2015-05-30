@@ -184,7 +184,7 @@ def get_recommended_items(user_prefs, item_match, user):
             total_sim[item2]+=similarity
 
     #Divide each total score by total weighting to get an average
-    rankings = [(score/total_sim[item],item) for item,score in scores.items()]
+    rankings = [(score/total_sim[item],item) for item,score in scores.items() if total_sim[item] != 0]
 
     #Return the rankings from highest to lowest
     rankings.sort()
@@ -240,7 +240,7 @@ if __name__ == '__main__':
     '''
 
     #Testing fill_reviews - careful!
-    fill_with_reviews(db.games, game_item_prefs, 500)
+    fill_with_reviews(db.games, game_item_prefs, 5000)
     #sample = game_item_prefs.keys()[0]
     #print(str(sample) + str(game_item_prefs[sample]))
     
