@@ -5,6 +5,7 @@
     padding: 10px; 
 }
 .description {
+	overflow:auto;
     border-radius: 25px;
     border: 2px solid #E1E1E1;
 	padding: 0px 0px 10px 0px;
