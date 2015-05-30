@@ -24,11 +24,13 @@
 			<tbody>
 				<tr>
 					<th>Domain</th>
-					<th>Count</th>
-					<th>Mean</th>
-					<th>Median</th>
-					<th>Mode</th>
-					<th>Standard Deviation</th>
+					<th># Scores</th>
+					<th>Mean (score)</th>
+					<th>Median (score)</th>
+					<th>Mode (score)</th>
+					<th>SD (score)</th>
+					<th># Users</th>
+					<th># Items</th>
 				</tr>
 				<tr>
 					<td>Games</td>
@@ -37,6 +39,8 @@
 					<td>5</td>
 					<td>5</td>
 					<td>1.353</td>
+					<td>228,570</td>
+					<td>21,025</td>
 				</tr>
 				<tr>
 					<td>Music</td>
@@ -45,6 +49,8 @@
 					<td>5</td>
 					<td>5</td>
 					<td>1.123</td>
+					<td>1,134,684</td>
+					<td>556,814</td>
 				</tr>
 				<tr>
 					<td>Movies</td>
@@ -53,6 +59,8 @@
 					<td>5</td>
 					<td>5</td>
 					<td>1.289</td>
+					<td>1,224,267</td>
+					<td>212,836</td>
 				</tr>
 				<tr>
 					<td>Books</td>
@@ -61,6 +69,8 @@
 					<td>5</td>
 					<td>5</td>
 					<td>1.206</td>
+					<td>2,588,991</td>
+					<td>929,264</td>
 				</tr>
 			</tbody>
 		</table>
@@ -105,7 +115,32 @@
 		<h2>
 			Performance:
 		</h2>
+		<ul style="text-align:left; font-size:120%">
+			<li style="float:left; padding-right:50px">Histogram:
+				<ul>
+					<li>Games: 8.79 seconds</li>
+					<li>Music: 5 minutes 29.68 seconds</li>
+					<li>Movies: 7 minutes 4.78 seconds</li>
+					<li>Books: 11 minutes 36.02 seconds</li>
+				</ul>
+			</li>
+			<li style="float:left; padding-right:50px">Statistics:
+				<ul>
+					<li>Games: 9.18 seconds </li>
+					<li>Music: 18 minutes and 23.61 seconds</li>
+					<li>Movies: 22 minutes and 22.89 seconds</li>
+					<li>Books: 37 minutes and 42.25 seconds</li>
+				</ul>
+			</li>
+			<li style="float:left; padding-right:50px">CF Queries:
+				<ul>
+					<li>Find Product: x seconds </li>
+					<li>Find Recommendation: x seconds</li>					
+				</ul>
+			</li>
 
+		</ul>
+		<div style="clear:both"></div>
 		<br>
 		<hr>
 		<h2>
@@ -123,6 +158,12 @@
 		      <li>Online Course:
 		         <ol>
 		            <li><a href="https://www.coursera.org/learn/recommender-systems">Coursera: Introduction to Recommender Systems</a></li>
+		         </ol>
+		      </li>
+		      <li>APIs:
+		         <ol>
+		            <li><a href="http://snap.stanford.edu/">Stanford Network Analysis Project</a></li>
+		            <li><a href="https://www.mashape.com/byroredux/metacritic-v2">Metacritic</a></li>
 		         </ol>
 		      </li>
 		      <li>Other Resources:
