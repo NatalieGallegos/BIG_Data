@@ -202,6 +202,16 @@ def transform_prefs(prefs):
             results[person][item] = prefs[item][person]
     return results
 
+def test_run(item_prefs):
+    user_prefs = transform_prefs(item_prefs)
+    matches = calculate_sim_items(item_prefs, 5)
+
+    test_user = user_prefs.keys()[0]
+    print ("Length: "+str(len(user_prefs.keys())))
+    rankings = get_recommended_items(user_prefs, matches, test_user)
+
+    return rankings
+
 ###################################################################
 ############################# MAIN ################################
 ###################################################################
@@ -210,59 +220,46 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
     
-    game_item_prefs = {}
-    
-    game_products_dict = {}
-    #music_products_dict = {}
-    #movie_products_dict = {}
-    #book_products_dict = {}
-
-    get_products(db.games, game_products_dict)
-    #get_products(db.music, music_products_dict)
-    #get_products(db.movies, movie_products_dict)
-    #get_products(db.books, book_products_dict)    
-    #fill_user_reviews(db.games, game_products_dict)
-
-    #print "Games unique ids: ", len(game_products_dict)
-    #print "Music unique ids: ", len(music_products_dict)
-    #print "Movies unique ids: ", len(movie_products_dict)
-    #print "Books unique ids: ", len(book_products_dict)
-
-    '''
-    pipeline = [{"$match": {"review/score": {"$exists": "true", "$ne": "null"}}},\
-    {"$group": {"_id": "$product/productId", "review/score": {"$push": "$review/score"}, "review/userId": {"$push": "$review/userId"}}},\
-    {"$limit": 10}\
-    ]
-    
-    cursor = db.command('aggregate', 'games', pipeline=pipeline)
-    for result in cursor:
-        print result
-    '''
+    game_prefs = {}
+    music_prefs = {}
+    movie_prefs = {}
+    book_prefs = {}
 
     #Testing fill_reviews - careful!
-    fill_with_reviews(db.games, game_item_prefs, 5000)
-    #sample = game_item_prefs.keys()[0]
-    #print(str(sample) + str(game_item_prefs[sample]))
-    
-    for i in range(0, 5):
-        sample = game_item_prefs.keys()[i]
-        print(str(sample) + ": " + str(game_item_prefs[sample])+ "\n")
-    
-    user_prefs= transform_prefs(game_item_prefs)
-    print "Transforming...\n"
-    
-    for i in range(0, 5):
-        sample = user_prefs.keys()[i]
-        print(str(sample) + ": " + str(user_prefs[sample])+ "\n")
-    
-    item_match = calculate_sim_items(game_item_prefs, 5)
+    fill_with_reviews(db.games, game_prefs, 50)
+    fill_with_reviews(db.music, music_prefs, 20)
+    fill_with_reviews(db.movies, movie_prefs, 20)
+    fill_with_reviews(db.books, book_prefs, 20)
+    #user_prefs= transform_prefs(game_item_prefs)
+    #item_match = calculate_sim_items(game_item_prefs, 5)
     #print item_match
 
-    rankings = get_recommended_items(user_prefs, item_match, user_prefs.keys()[0])
-    
-    print "\nRecommended items:"
-    for i in range(len(rankings)):
-        product_id = rankings[i][1]
+    game_rankings = test_run(game_prefs)
+    print "\nRecommended games:"
+    for i in range(len(game_rankings)):
+        product_id = game_rankings[i][1]
         game = db.games.find_one({"product/productId": product_id})
         #print game
-        print (game["product/title"]+": "+str(rankings[i][0]))
+        print (game["product/title"]+": "+str(game_rankings[i][0]))
+
+    music_rankings = test_run(music_prefs)
+    print "\nRecommended music:"
+    for i in range(len(music_rankings)):
+        product_id = music_rankings[i][1]
+        music = db.music.find_one({"product/productId": product_id})
+        print (music["product/title"]+": "+str(music_rankings[i][0]))
+
+    movie_rankings = test_run(movie_prefs)
+    print "\nRecommended movies:"
+    for i in range(len(movie_rankings)):
+        product_id = movie_rankings[i][1]
+        movie = db.movies.find_one({"product/productId": product_id})
+        print (movie["product/title"]+": "+str(movie_rankings[i][0]))
+
+    book_rankings = test_run(book_prefs)
+    print "\nRecommended books:"
+    for i in range(len(book_rankings)):
+        product_id = book_rankings[i][1]
+        book = db.books.find_one({"product/productId": product_id})
+        print (book["product/title"]+": "+str(book_rankings[i][0]))
+    
