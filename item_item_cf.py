@@ -162,8 +162,8 @@ def calculate_sim_items(prefs,n=10):
         result[item] = scores
     return result
 
-def get_recommended_items(prefs, item_match, user):
-    user_ratings = prefs[user]
+def get_recommended_items(user_prefs, item_match, user):
+    user_ratings = user_prefs[user]
     scores = {}
     total_sim = {}
 
@@ -190,6 +190,17 @@ def get_recommended_items(prefs, item_match, user):
     rankings.sort()
     rankings.reverse()
     return rankings
+
+#Function to transform Item, person - > Person, item
+def transform_prefs(prefs):
+    results = {}
+    for item in prefs:
+        for person in prefs[item]:
+            results.setdefault(person,{})
+
+            #Flip item and person
+            results[person][item] = prefs[item][person]
+    return results
 
 ###################################################################
 ############################# MAIN ################################
@@ -229,9 +240,28 @@ if __name__ == '__main__':
     '''
 
     #Testing fill_reviews - careful!
-    fill_with_reviews(db.games, game_item_prefs, 25)
+    fill_with_reviews(db.games, game_item_prefs, 500)
     #sample = game_item_prefs.keys()[0]
     #print(str(sample) + str(game_item_prefs[sample]))
+    for i in range(0, 5):
+        sample = game_item_prefs.keys()[i]
+        print(str(sample) + ": " + str(game_item_prefs[sample])+ "\n")
 
-    result = calculate_sim_items(game_item_prefs, 5)
-    print result
+    user_prefs= transform_prefs(game_item_prefs)
+    print "Transforming...\n"
+
+    for i in range(0, 5):
+        sample = user_prefs.keys()[i]
+        print(str(sample) + ": " + str(user_prefs[sample])+ "\n")
+
+    item_match = calculate_sim_items(game_item_prefs, 5)
+    #print item_match
+
+    rankings = get_recommended_items(user_prefs, item_match, user_prefs.keys()[0])
+    
+    print "\nRecommended items:"
+    for i in range(len(rankings)):
+        product_id = rankings[i][1]
+        titles = db.titles.find_one({"product/productId": product_id})
+        #print titles
+        print (titles["product/title"]+": "+str(rankings[i][0]))
