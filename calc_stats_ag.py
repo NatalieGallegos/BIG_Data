@@ -15,10 +15,10 @@ def calcStats(collection):
 
 	uniqueProducts = list(collection.aggregate([{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
 		{'$group': {'_id': '$product/productId'}},\
-	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}]))[0]["count"]
+	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}], allowDiskUse=True))[0]["count"]
 	uniqueUsers = list(collection.aggregate([{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
 		{'$group': {'_id': '$review/userId'}},\
-	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}]))[0]["count"]
+	 {'$group': {'_id': 1, 'count': {'$sum': 1}}}], allowDiskUse=True))[0]["count"]
 	print "Products: {}".format(uniqueProducts)
 	print "Users: {}".format(uniqueUsers)
 
@@ -35,7 +35,7 @@ def calcStats(collection):
 	mode_c = list(collection.aggregate([\
 			{'$match':{'review/score' : {'$exists': True, '$ne' : None}}},\
 			{'$group':{'_id': '$review/score', 'count': {'$sum': 1}} }\
-			]))
+			], allowDiskUse=True))
 	mode = max(mode_c, key = lambda x:x["count"])["_id"]
 	mode_c.sort(key = lambda x:x["count"])
 
@@ -74,7 +74,7 @@ def calcStats(collection):
 			'_id': None,\
 		 	'mean' : {'$avg' : '$review/score'},\
 		 	'meanx2': {'$avg': {'$multiply': ['$review/score', '$review/score']}}}\
-		}]))[0]
+		}], allowDiskUse=True))[0]
 
 	avg = averages["mean"]
 	avgx2 = averages["meanx2"]
@@ -91,10 +91,9 @@ if __name__ == '__main__':
 	client = MongoClient()
 	db = client.cs594
 
-	
-	calcStats(db.movies)
-	calcStats(db.music)
 	calcStats(db.games)
+	calcStats(db.music)
+	calcStats(db.movies)
 	calcStats(db.books)
 
 	
