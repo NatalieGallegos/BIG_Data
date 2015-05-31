@@ -49,37 +49,11 @@ def fill_with_reviews(collection, item_prefs, limit):
     #print item_prefs
 
     #fill in missing users with 0 as their reviews
-    for users in products_dict.values():
-        for user in all_users:
-            if user not in users:
-                users[user] = 0.0
+    #for users in products_dict.values():
+     #   for user in all_users:
+      #      if user not in users:
+       #         users[user] = 0.0
             
-def get_product_dict(collection, limit):
-    products = {}
-    all_users = {}
-    results = collection.aggregate([{'$match':{"review/score":\
-    {'$exists': True, '$ne': None},\
-    "review/userId":{'$ne':"unknown"}}},\
-    {'$group':{'_id':"$product/productId", "scores":{'$push':"$review/score"},\
-    "users":{'$push':"$review/userId"}}},{'$limit': limit}])
-    #add results to products
-    for result in results:
-        product_id = result['_id']
-        products[product_id] = {}
-        scores = result['scores']
-        users = result['users']
-        for i in range(len(scores)):
-            user = users[i]
-            score = scores[i]
-            products[product_id][user] = score
-            all_users[user] = 1
-    #fill in missing users with 0 as their reviews
-    for users in products.values():
-        for user in all_users:
-            if user not in users:
-                users[user] = 0.0
-    return products
-        
     
 
 
@@ -87,9 +61,8 @@ def get_products(collection, products_dict):
     
     #db.games.aggregate([{$match:{"review/score":{$exists:true, $ne:null}}},{$group:{_id:"$product/productId", "review/score":{$push:"$review/score"}, "review/userId":{$push:"$review/userId"}}},{$limit:10}])
     
-    
+    '''
     unique_p = []
-
     if (collection.count() > 10000000):
         db.subset.drop()
         for data in collection.find().limit(500000):
@@ -97,12 +70,11 @@ def get_products(collection, products_dict):
         unique_p = list(db.subset.distinct("product/productId"))
     else:
         unique_p = list(collection.distinct("product/productId"))
-
     db.subset.drop()
     
     for product in unique_p:
         products_dict[product] = {}
-    
+    '''
 
 ###################################################################
 ################ COLLABORATIVE FILTER SECTION #####################
@@ -289,3 +261,4 @@ if __name__ == '__main__':
         book = db.books.find_one({"product/productId": product_id})
         print (book["product/title"]+": "+str(book_rankings[i][0]))
     
+
