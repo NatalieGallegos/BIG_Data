@@ -254,9 +254,9 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
 
-    game_prefs = {}
+    game_prefs = {"Red Dead": 5.0}
     music_prefs = {}
-    movie_prefs = {"The Walking Dead":5.0, "Supernatural":5.0}
+    movie_prefs = {"Django":5.0}
     book_prefs = {}
 
 
