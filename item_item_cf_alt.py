@@ -213,33 +213,11 @@ def test_run(item_prefs):
 
     return rankings
 
-###################################################################
-############################# MAIN ################################
-###################################################################
-
-if __name__ == '__main__':
-    start = time.time()
-    client = pymongo.MongoClient()
-    db = client.cs594
-
-    user_prefs_names = {"Terminator":5.0, "Harry Potter":4.0}
-    test_user = {}
-
-    user_prefs = {}
+def getUserPrefs(collection, user_prefs_names, user_prefs, test_user):
     for item, score in user_prefs_names.iteritems():
         print ("\ntrying to find " + item)
         item_json = None
-        item_json = db.games.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
-        collection = db.games
-        if item_json == None:
-            item_json = db.music.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
-            collection = db.music
-        if item_json == None:
-            item_json = db.movies.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
-            collection = db.movies
-        if item_json == None:
-            item_json = db.books.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
-            collection = db.books
+        item_json = collection.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
 
         if item_json != None:
             item_id = item_json["product/productId"]
@@ -264,6 +242,33 @@ if __name__ == '__main__':
                     product_scores_dict[review["product/productId"]] = review["review/score"]
                 user_prefs[user] = product_scores_dict
             print ""
+        else:
+            print "NOT FOUND"
+
+###################################################################
+############################# MAIN ################################
+###################################################################
+
+if __name__ == '__main__':
+    start = time.time()
+    client = pymongo.MongoClient()
+    db = client.cs594
+
+    game_prefs = {}
+    music_prefs = {}
+    movie_prefs = {"The Walking Dead":5.0, "Supernatural":5.0}
+    book_prefs = {}
+
+
+    test_user = {}
+    user_prefs = {}
+    
+    getUserPrefs(db.games, game_prefs, user_prefs, test_user)
+    getUserPrefs(db.music, music_prefs, user_prefs, test_user)
+    getUserPrefs(db.movies, movie_prefs, user_prefs, test_user)
+    getUserPrefs(db.books, book_prefs, user_prefs, test_user)
+
+    
     print ("\nfinished database query: " + str(time.time()-start) + " seconds")
 
 
