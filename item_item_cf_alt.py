@@ -222,43 +222,29 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
 
-    user_prefs_names = {"Harry Potter":5.0}
+    user_prefs_names = {"Terminator":5.0, "Harry Potter":4.0}
     test_user = {}
 
     user_prefs = {}
     for item, score in user_prefs_names.iteritems():
-        print ("trying to find " + item)
-        item_json = {}
-        item_json = db.games.find_one({"product/title": {'$regex':'^'+item}})
+        print ("\ntrying to find " + item)
+        item_json = None
+        item_json = db.games.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
         collection = db.games
         if item_json == None:
-            item_json = db.music.find_one({"product/title": {'$regex':'^'+item}})
+            item_json = db.music.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
             collection = db.music
         if item_json == None:
-            item_json = db.movies.find_one({"product/title": {'$regex':'^'+item}})
+            item_json = db.movies.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
             collection = db.movies
         if item_json == None:
-            item_json = db.books.find_one({"product/title": {'$regex':'^'+item}})
+            item_json = db.books.find_one({"product/title": {'$regex':'^'+item}, "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True}})
             collection = db.books
 
         if item_json != None:
             item_id = item_json["product/productId"]
             print ("found " + item_json["product/title"] + " in " + collection.full_name)
             test_user[item_id.encode('ascii')] = score
-            # results = collection.aggregate([{'$match':{"review/score":\
-            # {'$exists': True, '$ne': None},\
-            # "review/userId":{'$ne':"unknown"},\
-            # "product/productId": item_id}},\
-            # {'$group':{'_id':"$review/userId", "scores":{'$push':"$review/score"},\
-            # "products":{'$push':"$product/productId"}}}], allowDiskUse=True)
-            # for result in results:
-            #     user_id = result['_id']
-            #     scores = result['scores']
-            #     products = result['products']
-            #     product_scores_dict = {}
-            #     for i in range(len(scores)):
-            #         product_scores_dict[products[i].encode('ascii')]=scores[i]
-            #     user_prefs[user_id.encode('ascii')] = product_scores_dict
             users = [x["review/userId"] for x in collection.find({"product/productId":item_id,\
             "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True} }, {"_id":0, "review/userId":1})]
             i=0
@@ -277,8 +263,10 @@ if __name__ == '__main__':
                 for review in reviews:
                     product_scores_dict[review["product/productId"]] = review["review/score"]
                 user_prefs[user] = product_scores_dict
-
+            print ""
     print ("\nfinished database query: " + str(time.time()-start) + " seconds")
+
+
     start = time.time()
     print ("# user prefs: "+str(len(user_prefs)))
     item_prefs = transform_prefs(user_prefs)
@@ -288,23 +276,23 @@ if __name__ == '__main__':
 
     print("finished recommending: " + str(time.time()-start) + " seconds")
 
-    print ("# rankings: "+str(len(rankings)))
+    print ("# rankings: "+str(len(rankings))+ "\n\n")
     for i in range(len(rankings)):
         product_id = rankings[i][1]
         item = db.games.find_one({"product/productId": product_id})
         if item != None:
-            print (item["product/title"]+": "+str(rankings[i][0])+" GAME")
+            print (" GAME  " + item["product/title"]+": "+str(rankings[i][0]))
             continue
         item = db.music.find_one({"product/productId": product_id})
         if item != None:
-            print (item["product/title"]+": "+str(rankings[i][0])+" MUSIC")
+            print (" MUSIC "+ item["product/title"]+": "+str(rankings[i][0]))
             continue
         item = db.movies.find_one({"product/productId": product_id})
         if item != None:
-            print (item["product/title"]+": "+str(rankings[i][0])+" MOVIE")
+            print (" MOVIE "+ item["product/title"]+": "+str(rankings[i][0]))
             continue
         item = db.books.find_one({"product/productId": product_id})
         if item != None:
-            print (item["product/title"]+": "+str(rankings[i][0])+" BOOK")
+            print (" BOOK  "+ item["product/title"]+": "+str(rankings[i][0]))
         
     
