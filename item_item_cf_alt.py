@@ -222,7 +222,7 @@ if __name__ == '__main__':
     client = pymongo.MongoClient()
     db = client.cs594
 
-    user_prefs_names = {"Harry Potter":5.0, "Call of Duty 4: Modern Warfare":5.0, "Lumines II":5.0}
+    user_prefs_names = {"Harry Potter":5.0}
     test_user = {}
 
     user_prefs = {}
