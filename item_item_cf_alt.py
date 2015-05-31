@@ -1,6 +1,7 @@
 import pymongo
 from math import sqrt
 import time
+import sys
 
 def fill_user_reviews(collection, products_dict):
     all_users = {}
@@ -226,6 +227,7 @@ if __name__ == '__main__':
 
     user_prefs = {}
     for item, score in user_prefs_names.iteritems():
+        print ("trying to find " + item)
         item_json = {}
         item_json = db.games.find_one({"product/title": {'$regex':'^'+item}})
         collection = db.games
@@ -257,8 +259,13 @@ if __name__ == '__main__':
             #     for i in range(len(scores)):
             #         product_scores_dict[products[i].encode('ascii')]=scores[i]
             #     user_prefs[user_id.encode('ascii')] = product_scores_dict
-            users = [x["review/userId"] for x in collection.find({"review/userId":item_json["review/userId"]}, {"_id":0, "review/userId":1})]
+            users = [x["review/userId"] for x in collection.find({"product/productId":item_id,\
+            "review/userId":{"$ne":"unknown"}, "review/score":{"$exists":True} }, {"_id":0, "review/userId":1})]
+            i=0
             for user in users:
+                i+=1
+                sys.stdout.write("\rfinding all products by user {}".format(i))
+                sys.stdout.flush()
                 reviews = list(db.games.find({"review/userId":user}))
                 for x in db.music.find({"review/userId":user}):
                     reviews.append(x)
@@ -271,7 +278,7 @@ if __name__ == '__main__':
                     product_scores_dict[review["product/productId"]] = review["review/score"]
                 user_prefs[user] = product_scores_dict
 
-    print ("finished database query: " + str(time.time()-start) + " seconds")
+    print ("\nfinished database query: " + str(time.time()-start) + " seconds")
     start = time.time()
     print ("# user prefs: "+str(len(user_prefs)))
     item_prefs = transform_prefs(user_prefs)
