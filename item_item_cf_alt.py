@@ -214,6 +214,7 @@ def test_run(item_prefs):
     return rankings
 
 def getUserPrefs(collection, user_prefs_names, user_prefs, test_user):
+    limit = 10
     for item, score in user_prefs_names.iteritems():
         print ("\ntrying to find " + item)
         item_json = None
@@ -228,6 +229,8 @@ def getUserPrefs(collection, user_prefs_names, user_prefs, test_user):
             i=0
             for user in users:
                 i+=1
+                if i > limit:
+                    break
                 sys.stdout.write("\rfinding all products by user {}".format(i))
                 sys.stdout.flush()
                 reviews = list(db.games.find({"review/userId":user}))
